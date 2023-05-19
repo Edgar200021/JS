@@ -1,29 +1,26 @@
 'use strict'
 
-let numberOfFilms
-
-function start() {
-  numberOfFilms = prompt('Сколько фильмов вы уже посмотрели?', '').trim()
-  while (
-    numberOfFilms === '' ||
-    numberOfFilms === null ||
-    isNaN(numberOfFilms)
-  ) {
-    numberOfFilms = prompt('Сколько фильмов вы уже посмотрели?', '').trim()
-  }
-}
-
-start()
 
 const personalMovieDB = {
-  count: numberOfFilms,
+  count: 0,
   movies: {},
   actors: {},
   genres: [],
   privat: false,
 }
 
-function rememberMyFilms() {
+personalMovieDB.start = function () {
+  this.count = prompt('Сколько фильмов вы уже посмотрели?', '').trim()
+  while (
+    this.count === '' ||
+    this.count === null ||
+    isNaN(this.count)
+  ) {
+    this.count = prompt('Сколько фильмов вы уже посмотрели?', '').trim()
+  }
+}
+
+personalMovieDB.rememberMyFilms = function () {
   for (let i = 0; i < 2; i++) {
     let lastWatchedMovie = prompt(
         'Один из последних просмотренных фильмов?',
@@ -46,9 +43,7 @@ function rememberMyFilms() {
   }
 }
 
-rememberMyFilms()
-
-function detectPersonalLevel() {
+personalMovieDB.detectPersonalLevel = function () {
   if (personalMovieDB.count < 10) {
     alert('Просмотрено давольно мало фильмов')
   } else if (personalMovieDB.count >= 10 && personalMovieDB.count < 30) {
@@ -60,23 +55,37 @@ function detectPersonalLevel() {
   }
 }
 
-detectPersonalLevel()
-
-function showMyDB(hidden) {
+personalMovieDB.showMyDB = function (hidden) {
   if (!hidden) {
     console.log(personalMovieDB)
   }
 }
 
-showMyDB(personalMovieDB.privat)
-
-function writeYourGenres() {
+personalMovieDB.writeYourGenres = function () {
   for (let i = 1; i <= 3; i++) {
-    personalMovieDB.genres[i - 1] = prompt(
-      `Ваш любимый жанр под номером ${i}`,
-      ''
-    ).trim()
+    const genre = prompt(`Ваш любимый жанр под номером ${i}`, '')
+    if (genre !== null && genre !== '') {
+      personalMovieDB.genres[i - 1] = genre.trim()
+    } else {
+      i--
+    }
   }
+
+  personalMovieDB.genres.forEach((item, i) => {
+    console.log(`Любимый жанр ${i + 1} - это ${item}`)
+  })
+}
+personalMovieDB.start()
+personalMovieDB.rememberMyFilms()
+personalMovieDB.detectPersonalLevel()
+personalMovieDB.showMyDB(personalMovieDB.privat)
+personalMovieDB.writeYourGenres()
+
+personalMovieDB.toggleVisibleMyDB = function () {
+	if (personalMovieDB.privat) {
+		personalMovieDB.privat = false
+	} else {
+		personalMovieDB.privat = true
+	}
 }
 
-writeYourGenres()
